@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date Invitation</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #d4a5a5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Georgia, serif;
+            position: relative;
+            overflow: hidden;
+            /* Makes the cursor big and black across the whole page */
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="1"><polygon points="0 0 0 24 7 17 14 24 16 22 9 15 18 15 0 0"/></svg>'), auto;
+        }
+
+        .card {
+            width: 550px;
+            height: 400px;
+            background: #f8faf2;
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            text-align: center;
+            padding: 30px;
+            position: relative;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        .dog {
+            font-size: 80px;
+            margin-top: 10px;
+        }
+
+        h1 {
+            color: #71384d;
+            font-size: 27px;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-top: 35px;
+            position: relative;
+        }
+
+        button {
+            border: none;
+            border-radius: 25px;
+            padding: 16px 36px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #yes {
+            background: #d45b83;
+        }
+
+        #no {
+            background: #ad70c2;
+            transition: 0.15s ease-out;
+        }
+
+        #success-card, #calendar-card, #vibe-card, #final-card {
+            display: none;
+        }
+
+        .sponge-icon {
+            font-size: 40px;
+            background: #d45b83;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        #next-btn {
+            background: #d45b83;
+            margin-top: 25px;
+            border-radius: 25px;
+            width: 80%;
+            font-weight: bold;
+        }
+
+        /* Calendar Card Styling */
+        .calendar-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin: 10px 30px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #71384d;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #dcdcdc;
+            background: #fff;
+            font-family: Georgia, serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            color: #555;
+        }
+
+        /* Center Red Error Alert Styling */
+        .error-message {
+            color: #d93838;
+            background: #fde8e8;
+            border: 1px solid #f8b4b4;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: bold;
+            margin: 10px 30px 0 30px;
+            display: none;
+        }
+
+        #set-date-btn {
+            background: #d45b83;
+            width: 80%;
+            margin-top: 10px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        /* Vibe Card Styling */
+        .vibe-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+            padding: 0 10px;
+        }
+
+        .vibe-option {
+            background: #f1f4ea;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .vibe-option:hover, .vibe-option.selected {
+            background: #faedee;
+            border-color: #d45b83;
+        }
+
+        .vibe-option span {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .vibe-option p {
+            margin: 0;
+            color: #71384d;
+            font-size: 14px;
+        }
+
+        /* Final Card Styling */
+        #final-card h1 {
+            font-size: 22px;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+
+        #final-card p {
+            color: #71384d;
+            font-size: 13px;
+            margin: 12px 0;
+            line-height: 1.4;
+        }
+
+        #accept-btn {
+            background: #d45b83;
+            width: 80%;
+            margin-top: 10px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Question Card -->
+    <div class="card" id="main-card">
+        <div class="dog">🐶</div>
+
+        <h1>Will you go on a date with </h1>
+        <h1>🌸Cedric Ugalde🌸 </h1>
+
+        <div class="buttons">
+            <button id="yes">YES ♥</button>
+            <button id="no">NO 😭</button>
+        </div>
+    </div>
+
+    <!-- Success Card (Shows when YES is clicked) -->
+    <div class="card" id="success-card">
+        <div class="sponge-icon">🧽</div>
+
+        <h1>WAIT YOU ACTUALLY SAID YES?? 😭</h1>
+        <p style="color: #71384d; font-size: 16px; margin-top: 15px;">I was so ready for you to say no 🙃</p>
+
+        <button id="next-btn">okay okay! →</button>
+    </div>
+
+    <!-- Calendar Card (Shows when "okay okay!" is clicked) -->
+    <div class="card" id="calendar-card">
+        <div class="calendar-icon">📅🐾</div>
+
+        <h1 style="margin-top: 5px; font-size: 24px;">So... when are you free?</h1>
+
+        <div class="form-group">
+            <label>Pick a Day 📅</label>
+            <input type="date" id="date-input">
+        </div>
+
+        <div class="form-group">
+            <label>What Time? ⏰</label>
+            <select id="time-select">
+                <option value="" disabled selected>Select a time...</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+            </select>
+        </div>
+
+        <!-- Red Alert Message Banner -->
+        <div id="error-msg" class="error-message"></div>
+
+        <button id="set-date-btn">set the date! ♥</button>
+    </div>
+
+    <!-- Vibe Card (Shows when "set the date!" is clicked) -->
+    <div class="card" id="vibe-card">
+        <h1 style="margin-top: 5px; font-size: 24px;">What are we feeling? 🍽️✨</h1>
+        <p style="color: #71384d; font-size: 13px; margin: 5px 0 15px 0;">pick your vibe</p>
+
+        <div class="vibe-grid">
+            <div class="vibe-option">
+                <span>🍕</span>
+                <p>Pizza</p>
+            </div>
+            <div class="vibe-option">
+                <span>🍣</span>
+                <p>Sushi</p>
+            </div>
+            <div class="vibe-option">
+                <span>🍔</span>
+                <p>Burgers</p>
+            </div>
+            <div class="vibe-option">
+                <span>🍝</span>
+                <p>Pasta</p>
+            </div>
+            <div class="vibe-option">
+                <span>🌮</span>
+                <p>Tacos</p>
+            </div>
+            <div class="vibe-option">
+                <span>🍜</span>
+                <p>Ramen</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Card (Shows when a food option is clicked) -->
+    <div class="card" id="final-card">
+        <h1 id="final-message">glad you didn't say no. be ready<br>by 6, I'm coming to get you 🚗</h1>
+        <p>P.S. normal people text. I made a website on Replit, during lunch, for you.<br>no big deal.</p>
+        <p style="letter-spacing: 3px; font-size: 16px; margin: 10px 0;">♥♥♥♥♥</p>
+
+        <button id="accept-btn">ok I accept 🥰</button>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById("no");
+        const mainCard = document.getElementById("main-card");
+        const successCard = document.getElementById("success-card");
+        const calendarCard = document.getElementById("calendar-card");
+        const vibeCard = document.getElementById("vibe-card");
+        const finalCard = document.getElementById("final-card");
+        const nextBtn = document.getElementById("next-btn");
+        const setDateBtn = document.getElementById("set-date-btn");
+        const dateInput = document.getElementById("date-input");
+        const timeSelect = document.getElementById("time-select");
+        const errorMsg = document.getElementById("error-msg");
+        const finalMessage = document.getElementById("final-message");
+        const acceptBtn = document.getElementById("accept-btn");
+
+        function setNoHover() {
+            noBtn.onmouseover = function() {
+                this.style.position = "absolute";
+                this.style.left = Math.random() * 200 + "%";
+                this.style.top = Math.random() * 200 + "%";
+            };
+        }
+
+        setNoHover();
+
+        document.getElementById("yes").onclick = function() {
+            noBtn.onmouseover = null;
+            noBtn.style.display = "none";
+
+            mainCard.style.display = "none";
+            successCard.style.display = "block";
+        };
+
+        nextBtn.onclick = function() {
+            successCard.style.display = "none";
+            calendarCard.style.display = "block";
+        };
+
+        setDateBtn.onclick = function() {
+            // Reset error display on click
+            errorMsg.style.display = "none";
+            errorMsg.innerHTML = "";
+
+            const hasDate = Boolean(dateInput.value);
+            const hasTime = Boolean(timeSelect.value);
+
+            // Red Alert Validations
+            if (!hasDate && !hasTime) {
+                errorMsg.innerHTML = "⚠️ Please pick a date and select a time!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (!hasDate) {
+                errorMsg.innerHTML = "⚠️ Please pick a date!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (!hasTime) {
+                errorMsg.innerHTML = "⚠️ Please select a time!";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            calendarCard.style.display = "none";
+            vibeCard.style.display = "block";
+        };
+
+        const vibes = document.querySelectorAll(".vibe-option");
+        vibes.forEach(vibe => {
+            vibe.onclick = function() {
+                const selectedDate = dateInput.value;
+                const selectedTime = timeSelect.value;
+
+                let formattedDate = selectedDate;
+                if (selectedDate) {
+                    const parts = selectedDate.split("-");
+                    if (parts.length === 3) {
+                        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                        formattedDate = dateObj.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' });
+                    }
+                }
+
+                finalMessage.innerHTML = `glad you didn't say no. be ready<br>on ${formattedDate} (${selectedTime}), I'm coming to get you 🚗`;
+
+                vibeCard.style.display = "none";
+                finalCard.style.display = "block";
+            };
+        });
+
+        acceptBtn.onclick = function() {
+            // Reset "No" button position & visibility
+            noBtn.style.display = "inline-block";
+            noBtn.style.position = "static";
+            setNoHover();
+
+            // Reset inputs & error message
+            dateInput.value = "";
+            timeSelect.selectedIndex = 0;
+            errorMsg.style.display = "none";
+
+            // Return to main card
+            finalCard.style.display = "none";
+            mainCard.style.display = "block";
+        };
+    </script>
+
+</body>
+</html>
